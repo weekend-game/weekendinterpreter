@@ -23,7 +23,7 @@ public class WeekendTextEditor {
 	public static final String APP_NAME = "WeekendInterprter";
 
 	/** Версия */
-	public static final String APP_VERSION = Loc.get("version") + " 00.00 " + Loc.get("from") + " 30.08.2025";
+	public static final String APP_VERSION = Loc.get("version") + " 00.00 " + Loc.get("from") + " 31.08.2025";
 
 	/** Copyright */
 	public static final String APP_COPYRIGHT = "(c) Weekend Game, 2025";

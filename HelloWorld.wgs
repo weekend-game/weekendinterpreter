@@ -1,0 +1,11 @@
+REM Пример программы
+
+PRINTLN "Привет, Мир!"
+
+PRINT "Привет! "
+PRINT "Привет! "
+PRINT "Привет, тебе!"
+PRINTLN ""
+PRINTLN ""
+
+

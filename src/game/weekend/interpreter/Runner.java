@@ -42,7 +42,7 @@ public class Runner {
 
 			BufferedReader inp = null;
 			try {
-				inp = new BufferedReader(new FileReader(file));
+				inp = new BufferedReader(new FileReader(file, Filer.CHARSET));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

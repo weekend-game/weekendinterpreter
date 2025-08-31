@@ -2,6 +2,10 @@ package game.weekend.texteditor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.file.Files;
 
 import javax.swing.JFileChooser;
@@ -13,11 +17,14 @@ import javax.swing.filechooser.FileFilter;
  */
 public class Filer {
 
+	/** Кодировка */
+	public static final Charset CHARSET = Charset.forName("UTF-8");
+
 	/** Расширение файлов */
-	public static final String EXTENSION = "txt";
+	public static final String EXTENSION = "wgs";
 
 	/** Название файлов */
-	public static final String DESCRIPTION = "*.txt - " + Loc.get("text_file");
+	public static final String DESCRIPTION = "*.wgs - " + Loc.get("weekend_game_script_source_code_files");
 
 	/**
 	 * Создать объект работы с файлами.
@@ -128,7 +135,7 @@ public class Filer {
 
 		} else {
 			try {
-				String content = Files.readString(file.toPath());
+				String content = Files.readString(file.toPath(), CHARSET);
 				this.file = file;
 
 				// Передаю прочитанное редактору
@@ -158,7 +165,13 @@ public class Filer {
 			return;
 
 		try {
-			Files.write(file.toPath(), editor.getPane().getText().getBytes());
+			CharsetEncoder encoder = CHARSET.newEncoder();
+			ByteBuffer output = encoder.encode(CharBuffer.wrap(editor.getPane().getText()));
+			byte[] bytes = new byte[output.remaining()];
+			output.get(bytes);
+
+			Files.write(file.toPath(), bytes);
+
 			this.file = file;
 			editor.setChanged(false);
 
