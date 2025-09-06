@@ -16,6 +16,14 @@ class TokenReader {
 		command = new HashMap<String, Integer>();
 		command.put("PRINT", Token.PRINT);
 		command.put("PRINTLN", Token.PRINTLN);
+		command.put("INPUT", Token.INPUT);
+		command.put("GOTO", Token.GOTO);
+		command.put("IF", Token.IF);
+		command.put("FOR", Token.FOR);
+		command.put("NEXT", Token.NEXT);
+		command.put("GOSUB", Token.GOSUB);
+		command.put("RETURN", Token.RETURN);
+		command.put("END", Token.END);
 		command.put("REM", Token.REM);
 	}
 
@@ -67,7 +75,7 @@ class TokenReader {
 			}
 
 			if (c == -1 || c == '\n') {
-				throw new InterpreterException("Нет закрывающих кавычек.", line, pos, text.getPos());
+				throw new InterpreterException("Нет закрывающих кавычек.", line, pos, pos + 1);
 			}
 
 			Token t = new Token(0, Token.STRING, sb.toString(), line, pos, text.getPos());

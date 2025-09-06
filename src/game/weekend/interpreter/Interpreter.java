@@ -9,8 +9,9 @@ public class Interpreter {
 		text = new Text(inp);
 		variables = new Variables(text);
 		tokenReader = new TokenReader(text);
+		labels = new Labels(tokenReader, text);
 		expressions = new Expressions(tokenReader, variables);
-		commands = new Commands(this, tokenReader, expressions);
+		commands = new Commands(this, tokenReader, variables, expressions, labels);
 	}
 
 	public void execute() throws InterpreterException {
@@ -44,6 +45,22 @@ public class Interpreter {
 					commands.print_();
 				} else if (t.code == Token.PRINTLN) {
 					commands.println_();
+				} else if (t.code == Token.INPUT) {
+					commands.input_();
+				} else if (t.code == Token.GOTO) {
+					commands.goto_();
+				} else if (t.code == Token.IF) {
+					commands.if_();
+				} else if (t.code == Token.FOR) {
+					commands.for_();
+				} else if (t.code == Token.NEXT) {
+					commands.next_();
+				} else if (t.code == Token.GOSUB) {
+					commands.gosub_();
+				} else if (t.code == Token.RETURN) {
+					commands.return_();
+				} else if (t.code == Token.END) {
+					break;
 				} else if (t.code == Token.REM) {
 					commands.rem_();
 				}
@@ -68,5 +85,6 @@ public class Interpreter {
 	private TokenReader tokenReader;
 	private Expressions expressions;
 	private Commands commands;
+	private Labels labels;
 	private boolean stop = false;
 }

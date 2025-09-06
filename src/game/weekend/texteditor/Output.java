@@ -35,11 +35,13 @@ public class Output implements IOutput {
 	@Override
 	public void print(String s) {
 		pane.append(s);
+		pane.setCaretPosition(pane.getCaretPosition() + s.length());
 	}
 
 	@Override
 	public void println(String s) {
 		pane.append(s + "\n");
+		pane.setCaretPosition(pane.getCaretPosition() + s.length() + 1);
 	}
 
 	/**

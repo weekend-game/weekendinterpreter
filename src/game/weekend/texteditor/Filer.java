@@ -21,10 +21,10 @@ public class Filer {
 	public static final Charset CHARSET = Charset.forName("UTF-8");
 
 	/** Расширение файлов */
-	public static final String EXTENSION = "wgs";
+	public static final String EXTENSION = "wgl";
 
 	/** Название файлов */
-	public static final String DESCRIPTION = "*.wgs - " + Loc.get("weekend_game_script_source_code_files");
+	public static final String DESCRIPTION = "*." + EXTENSION + " - " + Loc.get("weekend_game_language_source_code_files");
 
 	/**
 	 * Создать объект работы с файлами.
@@ -285,7 +285,7 @@ public class Filer {
 	private JFileChooser getSaveChooser(File currentFile) {
 		JFileChooser chooser = new JFileChooser();
 		if (currentFile == null)
-			chooser.setSelectedFile(new File("*.txt"));
+			chooser.setSelectedFile(new File("*." + EXTENSION));
 		else
 			chooser.setSelectedFile(currentFile);
 

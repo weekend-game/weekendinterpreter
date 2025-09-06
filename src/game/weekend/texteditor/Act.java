@@ -153,12 +153,18 @@ public class Act {
 		viewMenu.add(decFontSize);
 		viewMenu.add(defFontSize);
 
+		JMenu runMenu = new JMenu(Loc.get("run"));
+		runMenu.add(run);
+		runMenu.add(new JSeparator());
+		runMenu.add(stop);
+
 		JMenu helpMenu = new JMenu(Loc.get("help"));
 		helpMenu.add(about);
 
 		menu.add(fileMenu);
 		menu.add(editMenu);
 		menu.add(viewMenu);
+		menu.add(runMenu);
 		menu.add(helpMenu);
 
 		return menu;

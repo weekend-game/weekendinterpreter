@@ -39,9 +39,17 @@ class Token {
 	// Коды токенов
 	protected static final int EOF = 1;
 	protected static final int EOL = 2;
-	protected static final int REM = 101;
-	protected static final int PRINT = 102;
-	protected static final int PRINTLN = 103;
+	protected static final int PRINT = 101;
+	protected static final int PRINTLN = 102;
+	protected static final int INPUT = 103;
+	protected static final int GOTO = 104;
+	protected static final int IF = 105;
+	protected static final int FOR = 106;
+	protected static final int NEXT = 107;
+	protected static final int GOSUB = 108;
+	protected static final int RETURN = 109;
+	protected static final int END = 110;
+	protected static final int REM = 111;
 
 	protected final int code;
 	protected final int type;
