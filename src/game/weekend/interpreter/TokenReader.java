@@ -2,6 +2,8 @@ package game.weekend.interpreter;
 
 import java.util.HashMap;
 
+import game.weekend.texteditor.Loc;
+
 /**
  * Читатель лексем из Text.
  */
@@ -75,7 +77,7 @@ class TokenReader {
 			}
 
 			if (c == -1 || c == '\n') {
-				throw new InterpreterException("Нет закрывающих кавычек.", line, pos, pos + 1);
+				throw new InterpreterException(Loc.get("no_closing_quotes") + ".", line, pos, pos + 1);
 			}
 
 			Token t = new Token(0, Token.STRING, sb.toString(), line, pos, text.getPos());
@@ -115,7 +117,7 @@ class TokenReader {
 			return t;
 		}
 
-		throw new InterpreterException("Неопределённая лексема.", line, pos, text.getPos());
+		throw new InterpreterException(Loc.get("indefinite_lexeme") + ".", line, pos, text.getPos());
 	}
 
 	public void backToken(Token t) {

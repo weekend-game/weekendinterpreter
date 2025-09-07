@@ -2,6 +2,8 @@ package game.weekend.interpreter;
 
 import java.util.ArrayList;
 
+import game.weekend.texteditor.Loc;
+
 class Labels {
 	public Labels(TokenReader tr, Text tx) throws InterpreterException {
 		tokenReader = tr;
@@ -14,7 +16,7 @@ class Labels {
 			t = tokenReader.getToken();
 			if (t.type == Token.NUMBER) {
 				if (findLabel(t.code) != null) {
-					throw new InterpreterException("Дублирование меток.", t.line, t.fromPos, t.toPos);
+					throw new InterpreterException(Loc.get("duplicate_labels") + ".", t.line, t.fromPos, t.toPos);
 				}
 				int n = Integer.parseInt(t.value);
 				labels.add(new Label(n, line));

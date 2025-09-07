@@ -190,7 +190,7 @@ public class Filer {
 		}
 	}
 
-	private boolean saveFileIfNecessary() {
+	public boolean saveFileIfNecessary() {
 		if (!editor.isChanged())
 			return true;
 

@@ -2,6 +2,8 @@ package game.weekend.interpreter;
 
 import javax.swing.JOptionPane;
 
+import game.weekend.texteditor.Loc;
+
 class Commands {
 
 	protected Commands(Interpreter i, TokenReader tr, Variables vr, Expressions ex, Labels lb) {
@@ -59,14 +61,16 @@ class Commands {
 			mes = t.value;
 			t = tokenReader.getToken();
 			if (t.type != Token.DELIMITER && !t.value.equals(",")) {
-				throw new InterpreterException("Синтаксическая ошибка в операторе INPUT. Нет разделителя.", t.line,
-						t.fromPos, t.toPos);
+				throw new InterpreterException(
+						Loc.get("syntax_error_in_input_statement") + ". " + Loc.get("delimiter_not_found") + ".",
+						t.line, t.fromPos, t.toPos);
 			}
 			t = tokenReader.getToken();
 		}
 
 		if (t.type != Token.VARIABLE) {
-			throw new InterpreterException("Синтаксическая ошибка в операторе INPUT. Ожидается переменная.", t.line,
+			throw new InterpreterException(
+					Loc.get("syntax_error_in_input_statement") + ". " + Loc.get("variable_expected") + ".", t.line,
 					t.fromPos, t.toPos);
 		}
 
@@ -79,8 +83,8 @@ class Commands {
 			}
 		}
 		variables.setVar(t.value, i);
-		
-		inter.out.println(mes + " : " + i);
+
+		inter.out.println(mes + " " + i);
 	}
 
 	/**
@@ -105,7 +109,7 @@ class Commands {
 		// Операция сравнения
 		Token t = tokenReader.getToken();
 		if (!t.value.equals("<") && !t.value.equals(">") && !t.value.equals("=") && !t.value.equals("#")) {
-			throw new InterpreterException("Ожидается оператор сравнения.", t.line, t.fromPos, t.toPos);
+			throw new InterpreterException(Loc.get("comparison_operator_expected") + ".", t.line, t.fromPos, t.toPos);
 		}
 
 		// Правое выражение
@@ -135,7 +139,8 @@ class Commands {
 		if (cond) {
 			Token th = tokenReader.getToken();
 			if (!th.value.equalsIgnoreCase("THEN")) {
-				throw new InterpreterException("Необходим оператор THEN.", t.line, t.fromPos, t.toPos);
+				throw new InterpreterException(Loc.get("a_then_statement_is_required") + ".", t.line, t.fromPos,
+						t.toPos);
 			}
 		} else {
 			tokenReader.nextLine();
@@ -152,14 +157,15 @@ class Commands {
 		// Переменная цикла
 		Token t = tokenReader.getToken();
 		if (t.type != Token.VARIABLE) {
-			throw new InterpreterException("Не переменная.", t.line, t.fromPos, t.toPos);
+			throw new InterpreterException(Loc.get("not_variable") + ".", t.line, t.fromPos, t.toPos);
 		}
 		String varName = t.value;
 
 		// Ожидаем оператор присваивания
 		t = tokenReader.getToken();
 		if (!t.value.equals("=")) {
-			throw new InterpreterException("Необходим оператор присваивания.", t.line, t.fromPos, t.toPos);
+			throw new InterpreterException(Loc.get("an_assignment_operator_is_required") + ".", t.line, t.fromPos,
+					t.toPos);
 		}
 
 		// Начальное значение переменной цикла
@@ -169,7 +175,7 @@ class Commands {
 		// Ожидаем оператор TO
 		t = tokenReader.getToken();
 		if (!t.value.equalsIgnoreCase("TO")) {
-			throw new InterpreterException("Необходим оператор TO.", t.line, t.fromPos, t.toPos);
+			throw new InterpreterException(Loc.get("a_to_operator_is_required") + ".", t.line, t.fromPos, t.toPos);
 		}
 
 		// Конечное значение переменной цикла
@@ -208,7 +214,7 @@ class Commands {
 	protected void gosub_() throws InterpreterException {
 		int label = expressions.getExp();
 		if (labels.findLabel(label) == null) {
-			throw new InterpreterException("Неопределённая метка.", 0, 0, 0);
+			throw new InterpreterException(Loc.get("undefined_label") + ".", 0, 0, 0);
 		}
 		int line = tokenReader.getLine();
 		subStack.push(line);

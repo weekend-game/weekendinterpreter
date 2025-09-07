@@ -1,5 +1,7 @@
 package game.weekend.interpreter;
 
+import game.weekend.texteditor.Loc;
+
 class Expressions {
 
 	protected Expressions(TokenReader tr, Variables vr) {
@@ -87,7 +89,8 @@ class Expressions {
 			token = tokenReader.getToken();
 			res1 = level2();
 			if (!token.value.equals(")")) {
-				throw new InterpreterException("Непарные круглые скобки.", token.line, token.fromPos, token.toPos);
+				throw new InterpreterException(Loc.get("unpaired_parentheses") + ".", token.line, token.fromPos,
+						token.toPos);
 			}
 			token = tokenReader.getToken();
 		} else {
@@ -107,7 +110,7 @@ class Expressions {
 			result = variables.getVar(token.value);
 			token = tokenReader.getToken();
 		} else {
-			throw new InterpreterException("Синтаксическая ошибка.", token.line, token.fromPos, token.toPos);
+			throw new InterpreterException(Loc.get("syntax_error") + ".", token.line, token.fromPos, token.toPos);
 		}
 		return result;
 	}

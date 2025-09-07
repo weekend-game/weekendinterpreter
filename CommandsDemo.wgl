@@ -11,7 +11,7 @@ PRINTLN "b = ", b
 PRINTLN "b - 37 = ", b - 37
 
 PRINTLN "Ввод"
-INPUT "Укажите значение X ", x
+INPUT "Укажите значение X: ", x
 PRINTLN "Вы указали ", x
 
 PRINTLN "GOTO (Да простит меня Эдсгер Вибе Дейкстра)"

@@ -52,7 +52,8 @@ public class Output implements IOutput {
 	 *          программы.
 	 */
 	public void error(InterpreterException e) {
-		println("Ошибка. Строка: " + e.line + ". Позиция: " + e.fromPos + ". " + e.getMessage());
+		println(Loc.get("error") + ". " + Loc.get("line") + ": " + e.line + ". " + Loc.get("position") + ": "
+				+ e.fromPos + ". " + e.getMessage());
 		editor.setCurrentPos(e.line, e.fromPos, e.toPos);
 	}
 

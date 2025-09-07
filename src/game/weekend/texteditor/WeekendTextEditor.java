@@ -23,13 +23,16 @@ public class WeekendTextEditor {
 	public static final String APP_NAME = "WeekendInterprter";
 
 	/** Версия */
-	public static final String APP_VERSION = Loc.get("version") + " 01.00 " + Loc.get("from") + " 06.09.2025";
+	public static final String APP_VERSION = "01.10";
+
+	/** Дата */
+	public static final String APP_DATE = "07.09.2025";
 
 	/** Copyright */
 	public static final String APP_COPYRIGHT = "(c) Weekend Game, 2025";
 
 	/** Назначение */
-	public static final String APP_OTHER = Loc.get("weekend_interpreter");
+	public static final String APP_OTHER = "weekend_interpreter";
 
 	/** Путь к пиктограммам */
 	public static final String IMAGE_PATH = "/game/weekend/texteditor/images/";
@@ -44,6 +47,9 @@ public class WeekendTextEditor {
 	public WeekendTextEditor() {
 		// Хранитель настроек между сеансами работы приложения
 		Proper.read(APP_NAME);
+
+		// Язык интерфейса
+		Loc.setLanguage(Proper.getProperty("Language", "en"));
 
 		// Frame приложения
 		frame = new JFrame(APP_NAME);

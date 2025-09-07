@@ -2,6 +2,8 @@ package game.weekend.interpreter;
 
 import java.io.BufferedReader;
 
+import game.weekend.texteditor.Loc;
+
 public class Interpreter {
 
 	public Interpreter(BufferedReader inp, IOutput out) throws InterpreterException {
@@ -29,7 +31,8 @@ public class Interpreter {
 				// присваивания
 				t = tokenReader.getToken();
 				if (!t.value.equals("=")) {
-					throw new InterpreterException("Ожидается оператор присваивания.", t.line, t.fromPos, t.toPos);
+					throw new InterpreterException(Loc.get("an_assignment_operator_is_expected") + ".", t.line,
+							t.fromPos, t.toPos);
 				}
 
 				// и выражение. Вычисляем его значение
@@ -68,9 +71,9 @@ public class Interpreter {
 		} while (t.code != Token.EOF && !stop);
 
 		if (stop) {
-			out.println("Выполнение прервано.");
+			out.println(Loc.get("execution_interrupted") + ".");
 		} else {
-			out.println("Выполнение завершено.");
+			out.println(Loc.get("execution_completed") + ".");
 		}
 	}
 
