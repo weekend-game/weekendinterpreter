@@ -7,15 +7,16 @@ import game.weekend.interpreter.IOutput;
 import game.weekend.interpreter.InterpreterException;
 
 /**
- * Реализация интерфейса IOutput для обработки сообщений интерпретатора.
+ * Implementation of the IOutput interface to handle interpreter messages.
  */
 public class Output implements IOutput {
 
 	/**
-	 * Создать реализацию интерфейса IOutput для обработки сообщений интерпретатора.
+	 * Create an implementation of the IOutput interface to handle interpreter
+	 * messages.
 	 * 
-	 * @param editor редактор текста. Используется для позиционирования курсора на
-	 *               место обнаруженной ошибки.
+	 * @param editor text editor. Used to position the cursor to the location of the
+	 *               detected error.
 	 */
 	public Output(Editor editor) {
 		this.editor = editor;
@@ -45,11 +46,12 @@ public class Output implements IOutput {
 	}
 
 	/**
-	 * Отобразить сообщение об обнаруженной ошибке и указать её место в тексте
-	 * программы.
+	 * Display a message about the detected error and indicate its location in the
+	 * program text.
 	 * 
-	 * @param e исключение сгенерированное при обнаружении ошибки в тексте
-	 *          программы.
+	 * @param e an exception generated when an error is detected in the program
+	 *          text.
+	 * 
 	 */
 	public void error(InterpreterException e) {
 		println(Loc.get("error") + ". " + Loc.get("line") + ": " + e.line + ". " + Loc.get("position") + ": "
@@ -58,16 +60,16 @@ public class Output implements IOutput {
 	}
 
 	/**
-	 * Получть компонент отображения результатов интерпретатора.
+	 * Get the interpreter's results display component.
 	 * 
-	 * @return компонент отображения результатов интерпретатора.
+	 * @return interpreter results display component.
 	 */
 	public JTextArea getJTextArea() {
 		return pane;
 	}
 
 	/**
-	 * Получть JScrollPane.
+	 * Get JScrollPane.
 	 * 
 	 * @return JScrollPane.
 	 */

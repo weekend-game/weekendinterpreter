@@ -25,22 +25,22 @@ import javax.swing.UIManager;
 import game.weekend.interpreter.Runner;
 
 /**
- * Линейка меню, контекстное меню и инструментальная линейка. А так же все
- * Actions которые есть в приложении.
+ * Menu bar, context menu and toolbar. And also all Actions that are in the
+ * application.
  */
 public class Act {
 
 	/**
-	 * Создать объект линейки меню и инструменальной линейки.
+	 * Create a menu bar, context menu and toolbar object.
 	 * 
-	 * @param app       приложение.
-	 * @param editor    панель редактирования
-	 * @param filer     работа с файлом.
-	 * @param lastFiles последние открытые файлы
-	 * @param finder    поиск
-	 * @param replacer  замена
-	 * @param laf       LaF
-	 * @param messenger выдача сообщений
+	 * @param app       applicateion.
+	 * @param editor    editing panel.
+	 * @param filer     working with file.
+	 * @param lastFiles last opened files.
+	 * @param finder    finder.
+	 * @param replacer  replacer.
+	 * @param laf       LaF.
+	 * @param messenger displaying messages.
 	 */
 	public Act(WeekendTextEditor app, Editor editor, Filer filer, LastFiles lastFiles, Finder finder, Replacer replacer,
 			LaF laf, Messenger messenger, Runner runner) {
@@ -50,8 +50,8 @@ public class Act {
 		this.laf = laf;
 		this.messenger = messenger;
 
-		// Actions могут использоваться как в меню, так и в инструментальной линейке.
-		// Так что лучше их создать и запомнить один раз в конструкторе.
+		// Actions can be used both in the menu and in the toolbar, so it is better to
+		// create and remember them once in the designer.
 
 		newFile = getActNew(filer);
 		open = getActOpen(filer);
@@ -86,9 +86,9 @@ public class Act {
 	}
 
 	/**
-	 * Получить меню приложения.
+	 * Get the application menu.
 	 * 
-	 * @return меню приложения.
+	 * @return the application menu.
 	 */
 	@SuppressWarnings("serial")
 	public JMenuBar getMenuBar() {
@@ -209,16 +209,16 @@ public class Act {
 	}
 
 	/**
-	 * Получить Toolbar приложения.
+	 * Get the application toolbar.
 	 * 
-	 * @return Toolbar приложения.
+	 * @return the application toolbar.
 	 */
 	@SuppressWarnings("serial")
 	public JToolBar getToolBar() {
 
 		JToolBar toolBar = new JToolBar() {
-			// Кнопки toolbar-а не должны брать на себя фокус.
-			// Иначе теряется выделение текста в JEditorPane.
+			// Toolbar buttons should not take focus.
+			// Otherwise, the text selection in JEditorPane is lost.
 			@Override
 			protected JButton createActionComponent(Action a) {
 				JButton b = super.createActionComponent(a);
@@ -278,23 +278,22 @@ public class Act {
 		}
 
 		return popupMenu;
-
 	}
 
 	/**
-	 * Создать/пересоздать меню "Файл".
+	 * Create/recreate the File menu.
 	 * <p>
-	 * После открытия файла Filer добавляет его в список имен последних открытых
-	 * файлов (LastFiles) и обновляет меню File меню. Поэтому нужен отдельный метод
-	 * для создания/обновления этого меню.
+	 * After opening a file, Filer adds it to the list of names of the last opened
+	 * files (LastFiles) and updates the File menu. Therefore, a separate method is
+	 * needed to create/update this menu.
 	 */
 	public void refreshMenuFile() {
-		// Если меню ещё не создано, то создаю его
+		// If the menu has not yet been created, then I will create it
 		if (fileMenu == null) {
 			fileMenu = new JMenu(Loc.get("file"));
 			menu.add(fileMenu);
 		} else
-			// А иначе, очищаю от всех пунктов
+			// Otherwise, I clear all points
 			fileMenu.removeAll();
 
 		fileMenu.add(newFile);
@@ -302,15 +301,15 @@ public class Act {
 		fileMenu.add(save);
 		fileMenu.add(saveAs);
 
-		// Получаю список последних открытых файлов
+		// I get a list of recently opened files
 		List<String> list = this.lastFiles.getList();
 
-		// И если таковые были
+		// And if there were any
 		if (list.size() > 0) {
-			// добавляю в меню сепаратор
+			// add a separator to the menu
 			fileMenu.add(new JSeparator());
 
-			// и список открытых файлов
+			// and a list of open files
 			int i = 1;
 			for (String s : list)
 				fileMenu.add(getActOpenFile(filer, i++, s));
@@ -321,41 +320,39 @@ public class Act {
 	}
 
 	/**
-	 * Активировать/деактивировать пункт меню Cut.
+	 * Activate/deactivate the Cut menu item.
 	 * <p>
-	 * Пункт меню Cut деактивирован. Но если пользователь выделит фрагмент текста,
-	 * то его следует активировать, если пользователь сбросит выделение, то его
-	 * следует деактивировать. Это реализуется слушателем на JEditorPane (см.
-	 * конструктор Editor, фрагмент pane.addCaretListener...), который и вызывает
-	 * этот метод.
+	 * The Cut menu item is disabled. But if the user selects a text fragment, Cut
+	 * should be activated; if the user clears the selection, Cut should be
+	 * disabled. This is implemented by a listener on the JEditorPane (see the
+	 * Editor constructor, pane.addCaretListener...), which calls this method.
 	 * <p>
 	 * 
-	 * @param enabled true - активировать, flase деактивировать пункт меню Copy.
+	 * @param enabled true - activate, flase - deactivate the Copy menu item.
 	 */
 	public void setEnabledCut(boolean enabled) {
 		cut.setEnabled(enabled);
 	}
 
 	/**
-	 * Получить action для "Заменить..."
+	 * Get Action for "Replace..."
 	 * 
-	 * @return action для "Заменить..."
+	 * @return action for "Replace..."
 	 */
 	public AbstractAction getReplaceAction() {
 		return replace;
 	}
 
 	/**
-	 * Активировать/деактивировать пункт меню Copy.
+	 * Activate/deactivate the Copy menu item.
 	 * <p>
-	 * Пункт меню Copy деактивирован. Но если пользователь выделит фрагмент текста,
-	 * то его следует активировать, если пользователь сбросит выделение, то его
-	 * следует деактивировать. Это реализуется слушателем на JEditorPane (см.
-	 * конструктор Editor, фрагмент pane.addCaretListener...), который и вызывает
-	 * этот метод.
+	 * The Copy menu item is disabled. But if the user selects a text fragment, Copy
+	 * should be activated; if the user clears the selection, Copy should be
+	 * disabled. This is implemented by a listener on the JEditorPane (see the
+	 * Editor constructor, pane.addCaretListener...), which calls this method.
 	 * <p>
 	 * 
-	 * @param enabled true - активировать, flase деактивировать пункт меню Copy.
+	 * @param enabled true - activate, flase - deactivate the Copy menu item.
 	 */
 	public void setEnabledCopy(boolean enabled) {
 		copy.setEnabled(enabled);
@@ -370,15 +367,13 @@ public class Act {
 	}
 
 	/**
-	 * Определить активность действий для режима выполнения программы или для
-	 * исходного режима.
+	 * Determine the activity of actions for the program execution mode or for the
+	 * original mode.
 	 * 
-	 * @param arg если true, то устанавливается режим выполнения при котором ряд
-	 *            действий недоступны, иначе это обычнвй режим.
+	 * @param arg if true, then an execution mode is set in which a number of
+	 *            actions are unavailable, otherwise it is the normal mode.
 	 */
 	public void setRunMode(boolean arg) {
-		// editor.setEditable(!arg);
-
 		if (arg) {
 			newFile.setEnabled(false);
 			open.setEnabled(false);
@@ -416,11 +411,11 @@ public class Act {
 	}
 
 	/**
-	 * "Создать"
+	 * "New"
 	 * 
-	 * @param filer управление файлом программы.
+	 * @param filer program file management.
 	 * 
-	 * @return Action "Создать"
+	 * @return Action "New".
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActNew(Filer filer) {
@@ -439,11 +434,11 @@ public class Act {
 	}
 
 	/**
-	 * "Открыть..."
+	 * "Open..."
 	 * 
-	 * @param filer управление файлом программы.
+	 * @param filer program file management.
 	 * 
-	 * @return Action "Открыть..."
+	 * @return Action "Open..."
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActOpen(Filer filer) {
@@ -462,11 +457,11 @@ public class Act {
 	}
 
 	/**
-	 * "Сохранить"
+	 * "Save"
 	 * 
-	 * @param filer управление файлом программы.
+	 * @param filer program file management.
 	 * 
-	 * @return Action "Сохранить"
+	 * @return Action "Save"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActSave(Filer filer) {
@@ -485,11 +480,11 @@ public class Act {
 	}
 
 	/**
-	 * "Сохранить как..."
+	 * "Save as..."
 	 * 
-	 * @param filer управление файлом программы.
+	 * @param filer program file management.
 	 * 
-	 * @return Action "Сохранить как..."
+	 * @return Action "Save as..."
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActSaveAs(Filer filer) {
@@ -509,11 +504,11 @@ public class Act {
 	}
 
 	/**
-	 * Action для имен последних открытых файлов в меню приложения.
+	 * Action for names of recently opened files in the application menu.
 	 * 
-	 * @param no   номер файла 1..N.
-	 * @param name путь и имя файла.
-	 * @return Action для открытия указанного файла.
+	 * @param no   file number 1..N.
+	 * @param name path and file name.
+	 * @return Action to open the specified file.
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActOpenFile(Filer filer, int no, String name) {
@@ -532,11 +527,11 @@ public class Act {
 	}
 
 	/**
-	 * "Выход из программы"
+	 * "Exiting the program"
 	 * 
-	 * @param editor приложение.
+	 * @param viewer application.
 	 *
-	 * @return Action "Выход из программы"
+	 * @return Action "Exiting the program"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActExit(WeekendTextEditor app) {
@@ -555,9 +550,9 @@ public class Act {
 	}
 
 	/**
-	 * "Отменить"
+	 * "Undo"
 	 * 
-	 * @return Action "Отменить"
+	 * @return Action "Undo"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActUndo(Editor editor) {
@@ -577,9 +572,9 @@ public class Act {
 	}
 
 	/**
-	 * "Повторить"
+	 * "Redo"
 	 * 
-	 * @return Action "Повторить"
+	 * @return Action "Redo"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActRedo(Editor editor) {
@@ -599,9 +594,9 @@ public class Act {
 	}
 
 	/**
-	 * "Вырезать"
+	 * "Cut"
 	 * 
-	 * @return Action "Вырезать"
+	 * @return Action "Cut"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActCut(Editor editor) {
@@ -622,9 +617,9 @@ public class Act {
 	}
 
 	/**
-	 * "Копировать"
+	 * "Copy"
 	 * 
-	 * @return Action "Копировать"
+	 * @return Action "Copy"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActCopy(Editor editor) {
@@ -645,9 +640,9 @@ public class Act {
 	}
 
 	/**
-	 * "Вставить"
+	 * "Paste"
 	 * 
-	 * @return Action "Вставить"
+	 * @return Action "Paste"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActPaste(Editor editor) {
@@ -659,8 +654,8 @@ public class Act {
 				putValue(Action.ACCELERATOR_KEY,
 						KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK));
 
-				// Далаю всегда активным. Но было бы полезно при получении фокуса окном,
-				// проверить буфер обмена и уже на основании этого принимать решение.
+				// I always keep it active. But it would be useful to check the clipboard when
+				// the window receives focus and make a decision based on that.
 				setEnabled(true);
 			}
 
@@ -671,9 +666,9 @@ public class Act {
 	}
 
 	/**
-	 * "Выделить всё"
+	 * "Select all"
 	 * 
-	 * @return Action "Выделить всё"
+	 * @return Action "Select all"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActSelectAll(Editor editor) {
@@ -693,9 +688,9 @@ public class Act {
 	}
 
 	/**
-	 * "Поиск..."
+	 * "Find..."
 	 * 
-	 * @return Action "Поиск..."
+	 * @return Action "Find..."
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActFind(Finder finder) {
@@ -714,9 +709,9 @@ public class Act {
 	}
 
 	/**
-	 * "Продолжить поиск вперёд"
+	 * "Continue finding forward"
 	 * 
-	 * @return Action "Продолжить поиск вперёд"
+	 * @return Action "Continue finding forward"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActFindForward(Finder finder) {
@@ -735,9 +730,9 @@ public class Act {
 	}
 
 	/**
-	 * "Продолжить поиск назад"
+	 * "Continue finding backward"
 	 * 
-	 * @return Action "Продолжить поиск назад"
+	 * @return Action "Continue finding backward"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActFindBack(Finder finder) {
@@ -757,9 +752,9 @@ public class Act {
 	}
 
 	/**
-	 * "Заменить..."
+	 * "Replace..."
 	 * 
-	 * @return Action "Заменить..."
+	 * @return Action "Replace..."
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActReplace(Replacer replacer) {
@@ -778,11 +773,11 @@ public class Act {
 	}
 
 	/**
-	 * "Отображать инструментальную линейку"
+	 * "Show toolbar"
 	 * 
-	 * @param editor приложение.
+	 * @param editor application.
 	 *
-	 * @return Action "Отображать инструментальную линейку"
+	 * @return Action "Show toolbar"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActToolbarOn(WeekendTextEditor editor) {
@@ -801,11 +796,11 @@ public class Act {
 	}
 
 	/**
-	 * "Отображать строку состояния"
+	 * "Show status bar"
 	 * 
-	 * @param editor приложение.
+	 * @param editor application.
 	 *
-	 * @return Action "Отображать строку состояния"
+	 * @return Action "Show status bar"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActStatusbarOn(WeekendTextEditor editor) {
@@ -824,9 +819,9 @@ public class Act {
 	}
 
 	/**
-	 * "Использовать моноширинный шрифт"
+	 * "Use monospaced font"
 	 * 
-	 * @return Action "Использовать моноширинный шрифт"
+	 * @return Action "Use monospaced font"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActMonoFont(Editor editor) {
@@ -845,9 +840,9 @@ public class Act {
 	}
 
 	/**
-	 * "Увеличить шрифт"
+	 * "Increase font size"
 	 *
-	 * @return Action "Увеличить шрифт"
+	 * @return Action "Increase font size"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActIncFontSize(Editor editor) {
@@ -866,9 +861,9 @@ public class Act {
 	}
 
 	/**
-	 * "Уменьшить шрифт"
+	 * "Decrease font size"
 	 *
-	 * @return Action "Уменьшить шрифт"
+	 * @return Action "Decrease font size"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActDecFontSize(Editor editor) {
@@ -887,9 +882,9 @@ public class Act {
 	}
 
 	/**
-	 * "Размер шрифта по умолчанию"
+	 * "Default font size"
 	 * 
-	 * @return Action "Размер шрифта по умолчанию"
+	 * @return Action "Default font size"
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActDefFontSize(Editor editor) {
@@ -908,7 +903,7 @@ public class Act {
 	}
 
 	/**
-	 * "Выполнить".
+	 * "Run".
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActRun(Filer filer, Runner runner) {
@@ -922,14 +917,14 @@ public class Act {
 
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (filer.saveFileIfNecessary())
+				if (filer.saveFileForRun())
 					runner.run();
 			}
 		};
 	}
 
 	/**
-	 * "Остановить".
+	 * "Stop".
 	 */
 	@SuppressWarnings("serial")
 	private AbstractAction getActStop(Runner runner) {
@@ -950,14 +945,14 @@ public class Act {
 	}
 
 	/**
-	 * "О программе"
+	 * "About..."
 	 * 
-	 * @param editor приложение.
+	 * @param app application.
 	 * 
-	 * @return Action "О программе"
+	 * @return Action "About..."
 	 */
 	@SuppressWarnings("serial")
-	private AbstractAction getActAbout(WeekendTextEditor editor) {
+	private AbstractAction getActAbout(WeekendTextEditor app) {
 		return new AbstractAction() {
 			{
 				putValue(Action.NAME, Loc.get("about") + "...");

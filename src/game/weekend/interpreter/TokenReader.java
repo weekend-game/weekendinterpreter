@@ -5,33 +5,33 @@ import java.util.HashMap;
 import game.weekend.texteditor.Loc;
 
 /**
- * Читатель лексем из Text.
+ * Reader of lexemes from Text.
  */
 class TokenReader {
 
 	/**
-	 * Создать читатель лексем из Text.
+	 * Create a lexeme reader from Text.
 	 */
 	public TokenReader(Text t) {
 		text = t;
 
-		command = new HashMap<String, Integer>();
-		command.put("PRINT", Token.PRINT);
-		command.put("PRINTLN", Token.PRINTLN);
-		command.put("INPUT", Token.INPUT);
-		command.put("GOTO", Token.GOTO);
-		command.put("IF", Token.IF);
-		command.put("FOR", Token.FOR);
-		command.put("NEXT", Token.NEXT);
-		command.put("GOSUB", Token.GOSUB);
-		command.put("RETURN", Token.RETURN);
-		command.put("END", Token.END);
-		command.put("REM", Token.REM);
+		command = new HashMap<String, Token.Code>();
+		command.put("PRINT", Token.Code.PRINT);
+		command.put("PRINTLN", Token.Code.PRINTLN);
+		command.put("INPUT", Token.Code.INPUT);
+		command.put("GOTO", Token.Code.GOTO);
+		command.put("IF", Token.Code.IF);
+		command.put("FOR", Token.Code.FOR);
+		command.put("NEXT", Token.Code.NEXT);
+		command.put("GOSUB", Token.Code.GOSUB);
+		command.put("RETURN", Token.Code.RETURN);
+		command.put("END", Token.Code.END);
+		command.put("REM", Token.Code.REM);
 	}
 
 	public Token getToken() throws InterpreterException {
 
-		// Если лексему возвращали, то вернуть возвращённую лексему
+		// If the lexeme was returned, then return the returned lexeme
 		if (bufferedToken != null) {
 			Token t = bufferedToken;
 			bufferedToken = null;
@@ -44,9 +44,9 @@ class TokenReader {
 		int c;
 		c = text.read();
 
-		// Конец файла
+		// End of file
 		if (c == -1) {
-			Token t = new Token(Token.EOF, Token.DELIMITER, "EOF", line, pos, text.getPos());
+			Token t = new Token(Token.Code.EOF, Token.Type.DELIMITER, "EOF", line, pos, text.getPos());
 			text.backChar(c);
 			return t;
 		}
@@ -55,19 +55,19 @@ class TokenReader {
 			c = text.read();
 		}
 
-		// Перевод строки (Вообще-то следует запросить признак конца строки)
+		// Line feed
 		if (c == '\n') {
-			Token t = new Token(Token.EOL, Token.DELIMITER, "EOL", line, pos, text.getPos());
+			Token t = new Token(Token.Code.EOL, Token.Type.DELIMITER, "EOL", line, pos, text.getPos());
 			return t;
 		}
 
-		// Прочие разделители.
+		// Other delimiters
 		if (isDelim((char) c)) {
-			Token t = new Token(0, Token.DELIMITER, "" + (char) c, line, pos, text.getPos());
+			Token t = new Token(Token.Code.UNDEFINED, Token.Type.DELIMITER, "" + (char) c, line, pos, text.getPos());
 			return t;
 		}
 
-		// Строка
+		// String
 		if (c == '"') {
 			StringBuffer sb = new StringBuffer();
 			c = text.read();
@@ -80,11 +80,11 @@ class TokenReader {
 				throw new InterpreterException(Loc.get("no_closing_quotes") + ".", line, pos, pos + 1);
 			}
 
-			Token t = new Token(0, Token.STRING, sb.toString(), line, pos, text.getPos());
+			Token t = new Token(Token.Code.UNDEFINED, Token.Type.STRING, sb.toString(), line, pos, text.getPos());
 			return t;
 		}
 
-		// Число
+		// Number
 		if (Character.isDigit((char) c)) {
 			StringBuffer sb = new StringBuffer();
 			while (Character.isDigit((char) c)) {
@@ -92,11 +92,11 @@ class TokenReader {
 				c = text.read();
 			}
 			text.backChar(c);
-			Token t = new Token(0, Token.NUMBER, sb.toString(), line, pos, text.getPos());
+			Token t = new Token(Token.Code.UNDEFINED, Token.Type.NUMBER, sb.toString(), line, pos, text.getPos());
 			return t;
 		}
 
-		// Переменная или команда
+		// Variable or command
 		if (Character.isLetter((char) c)) {
 			StringBuffer sb = new StringBuffer();
 			do {
@@ -106,12 +106,13 @@ class TokenReader {
 			text.backChar(c);
 
 			String value = sb.toString();
-			Integer cc = command.get(value);
-			int code = 0;
-			if (cc != null) {
-				code = cc;
+			Token.Code tc = command.get(value);
+			Token.Code code = null;
+			if (tc != null) {
+				code = tc;
 			}
-			int type = (code == 0) ? Token.VARIABLE : Token.COMMAND;
+
+			Token.Type type = (code == null) ? Token.Type.VARIABLE : Token.Type.COMMAND;
 
 			Token t = new Token(code, type, value, line, pos, text.getPos());
 			return t;
@@ -142,6 +143,10 @@ class TokenReader {
 		return text.getPos();
 	}
 
+	public void reset() {
+		text.reset();
+	}
+
 	private boolean isDelim(char c) {
 		for (char del : delimiter) {
 			if (c == del)
@@ -160,5 +165,5 @@ class TokenReader {
 	private final char[] delimiter = { ' ', ';', ',', '+', '-', '<', '>', '/', '*', '%', '^', '=', '(', ')', '\t', '\n',
 			'\0' };
 
-	private HashMap<String, Integer> command;
+	private HashMap<String, Token.Code> command;
 }

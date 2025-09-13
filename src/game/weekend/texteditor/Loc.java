@@ -26,7 +26,6 @@ public class Loc {
 			try {
 				return bundle.getString(name);
 			} catch (MissingResourceException e) {
-System.out.println("Нет " + name);
 			}
 
 		return getDefString(name);

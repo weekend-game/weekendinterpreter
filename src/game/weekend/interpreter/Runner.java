@@ -1,4 +1,4 @@
-package game.weekend.interpreter;
+ package game.weekend.interpreter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,16 +10,16 @@ import game.weekend.texteditor.Filer;
 import game.weekend.texteditor.Output;
 
 /**
- * Упрвление выполнением интерпретатором текста программы.
+ * Control of execution by the interpreter.
  */
 public class Runner {
 
 	/**
-	 * Создать объект управляющий выполнением интерпретатором текста программы.
+	 * Create an object that controls the execution of the interpreter.
 	 * 
-	 * @param filer  - управление файлом программы.
-	 * @param output - реализация интерфейса Output для обработки сообщений
-	 *               интерпретатора.
+	 * @param filer  - file handling object.
+	 * @param output - implementation of the Output interface for processing
+	 *               interpreter messages.
 	 */
 	public Runner(Filer filer, Output output) {
 		this.filer = filer;
@@ -27,14 +27,14 @@ public class Runner {
 	}
 
 	/**
-	 * Установить объект управляющий действиями.
+	 * Set the Act object.
 	 */
 	public void setAct(Act act) {
 		this.act = act;
 	}
 
 	/**
-	 * "Выполнить".
+	 * "Run".
 	 */
 	public void run() {
 		File file = filer.getFile();
@@ -53,7 +53,7 @@ public class Runner {
 	}
 
 	/**
-	 * "Остановить".
+	 * "Stop".
 	 */
 	public void stop() {
 		if (starter != null) {
@@ -62,7 +62,7 @@ public class Runner {
 	}
 
 	/**
-	 * Запуск интерпретатора в собственном потоке.
+	 * Run the interpreter in its own thread.
 	 */
 	private class Starter extends Thread {
 
@@ -82,7 +82,7 @@ public class Runner {
 				inter.execute();
 				inter = null;
 			} catch (InterpreterException e) {
-				out.error(e); // Сообщения об ошибках передаются как исключения
+				out.error(e); // Error messages are passed as exceptions
 			} finally {
 				if (act != null) {
 					act.setRunMode(false);
@@ -98,7 +98,7 @@ public class Runner {
 		}
 
 		/**
-		 * Остановить выполнение.
+		 * Stop the program execution.
 		 */
 		public void stopRunning() {
 			inter.stop();

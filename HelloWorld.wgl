@@ -1,10 +1,10 @@
-REM Пример программы
+REM Example program
 
-PRINTLN "Привет, Мир!"
+PRINTLN "Hello World!"
 
-PRINT "Привет! "
-PRINT "Привет! "
-PRINT "Привет, тебе!"
+PRINT "Hello! "
+PRINT "Hello! "
+PRINT "Hello World!"
 PRINTLN ""
 PRINTLN ""
 

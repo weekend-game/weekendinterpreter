@@ -9,9 +9,9 @@ public class Interpreter {
 	public Interpreter(BufferedReader inp, IOutput out) throws InterpreterException {
 		this.out = out;
 		text = new Text(inp);
-		variables = new Variables(text);
+		variables = new Variables();
 		tokenReader = new TokenReader(text);
-		labels = new Labels(tokenReader, text);
+		labels = new Labels(tokenReader);
 		expressions = new Expressions(tokenReader, variables);
 		commands = new Commands(this, tokenReader, variables, expressions, labels);
 	}
@@ -21,54 +21,52 @@ public class Interpreter {
 
 		Token t;
 		do {
-			// Последовательно читаем лексемы.
+			// Sequential reading of lexemes
 			t = tokenReader.getToken();
-			if (t.type == Token.VARIABLE) {
-				// Переменная. Запомним её имя.
+			if (t.type == Token.Type.VARIABLE) {
+				// Variable. Let's remember its name.
 				String varName = t.value;
 
-				// Раз это переменная, то далее ожидаем оператор
-				// присваивания
+				// Since this is a variable, we expect an assignment operator
 				t = tokenReader.getToken();
 				if (!t.value.equals("=")) {
 					throw new InterpreterException(Loc.get("an_assignment_operator_is_expected") + ".", t.line,
 							t.fromPos, t.toPos);
 				}
 
-				// и выражение. Вычисляем его значение
+				// and an expression. We calculate its value
 				int result = expressions.getExp();
-				// и присваиваем переменной.
+				// and assign it to the variable.
 				variables.setVar(varName, result);
 
-				// Если не переменная, то ожидаем команду.
-			} else if (t.type == Token.COMMAND) {
-				// Для каждой команды вызываем соответстыующий метод объекта
-				// команд.
-				if (t.code == Token.PRINT) {
+				// If it is not a variable, then we expect a command
+			} else if (t.type == Token.Type.COMMAND) {
+				// For each command, we call the corresponding method of the commands object
+				if (t.code == Token.Code.PRINT) {
 					commands.print_();
-				} else if (t.code == Token.PRINTLN) {
+				} else if (t.code == Token.Code.PRINTLN) {
 					commands.println_();
-				} else if (t.code == Token.INPUT) {
+				} else if (t.code == Token.Code.INPUT) {
 					commands.input_();
-				} else if (t.code == Token.GOTO) {
-					commands.goto_();
-				} else if (t.code == Token.IF) {
+				} else if (t.code == Token.Code.GOTO) {
+					commands.goto_(t);
+				} else if (t.code == Token.Code.IF) {
 					commands.if_();
-				} else if (t.code == Token.FOR) {
+				} else if (t.code == Token.Code.FOR) {
 					commands.for_();
-				} else if (t.code == Token.NEXT) {
+				} else if (t.code == Token.Code.NEXT) {
 					commands.next_();
-				} else if (t.code == Token.GOSUB) {
+				} else if (t.code == Token.Code.GOSUB) {
 					commands.gosub_();
-				} else if (t.code == Token.RETURN) {
+				} else if (t.code == Token.Code.RETURN) {
 					commands.return_();
-				} else if (t.code == Token.END) {
+				} else if (t.code == Token.Code.END) {
 					break;
-				} else if (t.code == Token.REM) {
+				} else if (t.code == Token.Code.REM) {
 					commands.rem_();
 				}
 			}
-		} while (t.code != Token.EOF && !stop);
+		} while (t.code != Token.Code.EOF && !stop);
 
 		if (stop) {
 			out.println(Loc.get("execution_interrupted") + ".");

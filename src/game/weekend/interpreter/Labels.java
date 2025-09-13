@@ -5,38 +5,41 @@ import java.util.ArrayList;
 import game.weekend.texteditor.Loc;
 
 class Labels {
-	public Labels(TokenReader tr, Text tx) throws InterpreterException {
-		tokenReader = tr;
-		text = tx;
+	public Labels(TokenReader tokenReader) throws InterpreterException {
+		this.tokenReader = tokenReader;
 
-		Token t;
+		Token token;
 		int line = 1;
 		do {
 			tokenReader.setLine(line);
-			t = tokenReader.getToken();
-			if (t.type == Token.NUMBER) {
-				if (findLabel(t.code) != null) {
-					throw new InterpreterException(Loc.get("duplicate_labels") + ".", t.line, t.fromPos, t.toPos);
+			token = tokenReader.getToken();
+			if (token.type == Token.Type.NUMBER) {
+				int number = Integer.parseInt(token.value);
+				if (getLabel(number) != null) {
+					throw new InterpreterException(Loc.get("duplicate_labels") + ".", token.line, token.fromPos,
+							token.toPos);
 				}
-				int n = Integer.parseInt(t.value);
-				labels.add(new Label(n, line));
+				labels.add(new Label(number, line));
 			}
 			++line;
-		} while (t.code != Token.EOF);
+		} while (token.code != Token.Code.EOF);
 
-		text.reset();
+		tokenReader.reset();
 	}
 
-	public void goToLabel(int no) {
-		Label l = findLabel(no);
-		if (l != null) {
-			tokenReader.setLine(l.position);
-		}
+	public void goToLabel(int number) {
+		Label l = getLabel(number);
+		if (l != null)
+			tokenReader.setLine(l.line);
 	}
 
-	public Label findLabel(int name) {
+	public void goToLabel(Label label) {
+		tokenReader.setLine(label.line);
+	}
+
+	public Label getLabel(int number) {
 		for (Label l : labels) {
-			if (l.name == name) {
+			if (l.number == number) {
 				return l;
 			}
 		}
@@ -44,16 +47,15 @@ class Labels {
 	}
 
 	private TokenReader tokenReader;
-	private Text text;
 	private ArrayList<Label> labels = new ArrayList<Label>();
 
-	private class Label {
-		public Label(int name, int position) {
-			this.name = name;
-			this.position = position;
+	public static class Label {
+		public Label(int number, int line) {
+			this.number = number;
+			this.line = line;
 		}
 
-		private final int name;
-		private final int position;
+		private final int number;
+		private final int line;
 	}
 }

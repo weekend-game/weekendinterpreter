@@ -63,7 +63,7 @@ class Expressions {
 		return res1;
 	}
 
-	// Унарный + и -
+	// Unary + и -
 	private int level5() throws InterpreterException {
 
 		String oper = token.value;
@@ -81,7 +81,7 @@ class Expressions {
 		return res1;
 	}
 
-	// Скобки
+	// Parentheses
 	private int level6() throws InterpreterException {
 
 		int res1 = 0;
@@ -99,14 +99,14 @@ class Expressions {
 		return res1;
 	}
 
-	// Число
+	// Number
 	private int level7() throws InterpreterException {
 		int result = 0;
 
-		if (token.type == Token.NUMBER) {
+		if (token.type == Token.Type.NUMBER) {
 			result = Integer.parseInt(token.value);
 			token = tokenReader.getToken();
-		} else if (token.type == Token.VARIABLE) {
+		} else if (token.type == Token.Type.VARIABLE) {
 			result = variables.getVar(token.value);
 			token = tokenReader.getToken();
 		} else {

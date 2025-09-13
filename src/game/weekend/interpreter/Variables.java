@@ -4,7 +4,7 @@ import game.weekend.texteditor.Loc;
 
 class Variables {
 
-	protected Variables(Text text) {
+	protected Variables() {
 	}
 
 	protected int getVar(String name) throws InterpreterException {

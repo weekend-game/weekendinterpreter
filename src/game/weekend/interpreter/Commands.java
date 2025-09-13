@@ -15,7 +15,7 @@ class Commands {
 	}
 
 	/**
-	 * Команда PRINT
+	 * Command PRINT
 	 * 
 	 * @throws InterpreterException
 	 */
@@ -23,11 +23,11 @@ class Commands {
 		Token t;
 		do {
 			t = tokenReader.getToken();
-			if (t.code == Token.EOL || t.code == Token.EOF)
+			if (t.code == Token.Code.EOL || t.code == Token.Code.EOF)
 				return;
 
 			String result = "";
-			if (t.type == Token.STRING) {
+			if (t.type == Token.Type.STRING) {
 				result = t.value;
 			} else {
 				tokenReader.backToken(t);
@@ -40,7 +40,7 @@ class Commands {
 	}
 
 	/**
-	 * Команда PRINTLN
+	 * Command PRINTLN
 	 * 
 	 * @throws InterpreterException
 	 */
@@ -50,17 +50,17 @@ class Commands {
 	}
 
 	/**
-	 * Команда INPUT
+	 * Command INPUT
 	 * 
 	 * @throws InterpreterException
 	 */
 	protected void input_() throws InterpreterException {
 		Token t = tokenReader.getToken();
 		String mes = "";
-		if (t.type == Token.STRING) {
+		if (t.type == Token.Type.STRING) {
 			mes = t.value;
 			t = tokenReader.getToken();
-			if (t.type != Token.DELIMITER && !t.value.equals(",")) {
+			if (t.type != Token.Type.DELIMITER && !t.value.equals(",")) {
 				throw new InterpreterException(
 						Loc.get("syntax_error_in_input_statement") + ". " + Loc.get("delimiter_not_found") + ".",
 						t.line, t.fromPos, t.toPos);
@@ -68,7 +68,7 @@ class Commands {
 			t = tokenReader.getToken();
 		}
 
-		if (t.type != Token.VARIABLE) {
+		if (t.type != Token.Type.VARIABLE) {
 			throw new InterpreterException(
 					Loc.get("syntax_error_in_input_statement") + ". " + Loc.get("variable_expected") + ".", t.line,
 					t.fromPos, t.toPos);
@@ -88,34 +88,41 @@ class Commands {
 	}
 
 	/**
-	 * Команда GOTO
+	 * Command GOTO
 	 * 
 	 * @throws InterpreterException
 	 */
-	protected void goto_() throws InterpreterException {
-		int l = expressions.getExp();
+	protected void goto_(Token token) throws InterpreterException {
+		int number = expressions.getExp();
+
+		Labels.Label l = labels.getLabel(number);
+
+		if (l == null)
+			throw new InterpreterException(Loc.get("label") + " " + number + " " + Loc.get("not_found_") + ".",
+					token.line, token.fromPos, token.toPos);
+
 		labels.goToLabel(l);
 	}
 
 	/**
-	 * Команда IF
+	 * Command IF
 	 * 
 	 * @throws InterpreterException
 	 */
 	protected void if_() throws InterpreterException {
-		// Левое вырожение
+		// Left expression
 		int left = expressions.getExp();
 
-		// Операция сравнения
+		// Comparison operation
 		Token t = tokenReader.getToken();
 		if (!t.value.equals("<") && !t.value.equals(">") && !t.value.equals("=") && !t.value.equals("#")) {
 			throw new InterpreterException(Loc.get("comparison_operator_expected") + ".", t.line, t.fromPos, t.toPos);
 		}
 
-		// Правое выражение
+		// Right expression
 		int right = expressions.getExp();
 
-		// Результат операции сравнения
+		// Result of comparison operation
 		boolean cond = false;
 		if (t.value.equals("<")) {
 			if (left < right) {
@@ -135,7 +142,7 @@ class Commands {
 			}
 		}
 
-		// Переходы
+		// Transitions
 		if (cond) {
 			Token th = tokenReader.getToken();
 			if (!th.value.equalsIgnoreCase("THEN")) {
@@ -148,37 +155,37 @@ class Commands {
 	}
 
 	/**
-	 * Команда FOR
+	 * Command FOR
 	 * 
 	 * @throws InterpreterException
 	 */
 	protected void for_() throws InterpreterException {
 
-		// Переменная цикла
+		// Loop variable
 		Token t = tokenReader.getToken();
-		if (t.type != Token.VARIABLE) {
+		if (t.type != Token.Type.VARIABLE) {
 			throw new InterpreterException(Loc.get("not_variable") + ".", t.line, t.fromPos, t.toPos);
 		}
 		String varName = t.value;
 
-		// Ожидаем оператор присваивания
+		// Assignment operator expected
 		t = tokenReader.getToken();
 		if (!t.value.equals("=")) {
 			throw new InterpreterException(Loc.get("an_assignment_operator_is_required") + ".", t.line, t.fromPos,
 					t.toPos);
 		}
 
-		// Начальное значение переменной цикла
+		// Initial value of the loop variable
 		int init = expressions.getExp();
 		variables.setVar(varName, init);
 
-		// Ожидаем оператор TO
+		// TO operator expected
 		t = tokenReader.getToken();
 		if (!t.value.equalsIgnoreCase("TO")) {
 			throw new InterpreterException(Loc.get("a_to_operator_is_required") + ".", t.line, t.fromPos, t.toPos);
 		}
 
-		// Конечное значение переменной цикла
+		// The final value of the loop variable
 		int target = expressions.getExp();
 
 		if (init <= target) {
@@ -192,7 +199,7 @@ class Commands {
 	}
 
 	/**
-	 * Команда NEXT
+	 * Command NEXT
 	 * 
 	 * @throws InterpreterException
 	 */
@@ -207,13 +214,13 @@ class Commands {
 	}
 
 	/**
-	 * Команда GOSUB
+	 * Command GOSUB
 	 * 
 	 * @throws InterpreterException
 	 */
 	protected void gosub_() throws InterpreterException {
 		int label = expressions.getExp();
-		if (labels.findLabel(label) == null) {
+		if (labels.getLabel(label) == null) {
 			throw new InterpreterException(Loc.get("undefined_label") + ".", 0, 0, 0);
 		}
 		int line = tokenReader.getLine();
@@ -221,17 +228,13 @@ class Commands {
 		labels.goToLabel(label);
 	}
 
-	/** Команда RETURN */
+	/** Command RETURN */
 	protected void return_() {
 		int line = subStack.pop();
 		tokenReader.setLine(line);
 	}
 
-	/** Команда END */
-	protected void end_() {
-	}
-
-	/** Команда REM */
+	/** Command REM */
 	protected void rem_() throws InterpreterException {
 		tokenReader.nextLine();
 	}

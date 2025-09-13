@@ -13,21 +13,21 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * Работа с файлами.
+ * File handling.
  */
 public class Filer {
 
-	/** Кодировка */
 	public static final Charset CHARSET = Charset.forName("UTF-8");
 
-	/** Расширение файлов */
+	/** File extension */
 	public static final String EXTENSION = "wgl";
 
-	/** Название файлов */
-	public static final String DESCRIPTION = "*." + EXTENSION + " - " + Loc.get("weekend_game_language_source_code_files");
+	/** File name */
+	public static final String DESCRIPTION = "*." + EXTENSION + " - "
+			+ Loc.get("weekend_game_language_source_code_files");
 
 	/**
-	 * Создать объект работы с файлами.
+	 * Create a file handling object.
 	 */
 	public Filer(WeekendTextEditor app, Editor editor, LastFiles lastFiles, Finder finder, Replacer replacer,
 			Messenger messenger) {
@@ -40,23 +40,21 @@ public class Filer {
 	}
 
 	/**
-	 * Установить объект управляющий действиями.
+	 * Set the Act object.
 	 */
 	public void setAct(Act act) {
 		this.act = act;
 	}
 
 	/**
-	 * Получить текущий редактируемый файл.
-	 * 
-	 * @return - редактируемый файл.
+	 * Get current file.
 	 */
 	public File getFile() {
 		return file;
 	};
 
 	/**
-	 * Реализация "Создать"
+	 * "New"
 	 */
 	public void newFile() {
 		if (!saveFileIfNecessary())
@@ -75,7 +73,7 @@ public class Filer {
 	}
 
 	/**
-	 * Реализация "Открыть..."
+	 * "Open..."
 	 */
 	public void openFile() {
 		if (!saveFileIfNecessary())
@@ -88,7 +86,7 @@ public class Filer {
 	}
 
 	/**
-	 * Реализация "Сохранить"
+	 * "Save"
 	 */
 	public void saveFile() {
 		if (file != null)
@@ -98,7 +96,7 @@ public class Filer {
 	}
 
 	/**
-	 * Реализация "Сохранить как..."
+	 * "Save as..."
 	 */
 	public void saveAsFile() {
 		File file = showSaveDialogue();
@@ -108,7 +106,7 @@ public class Filer {
 	}
 
 	/**
-	 * Открыть файл по имени
+	 * Open file by name
 	 */
 	public void openFileByName(File file) {
 		if (!saveFileIfNecessary())
@@ -118,19 +116,20 @@ public class Filer {
 	}
 
 	/**
-	 * Открыть указнный файл и отобразить его.
+	 * Open the specified file and display it.
 	 * 
-	 * @param file открываемый файл
+	 * @param file file to open
 	 */
 	public void open(File file) {
 		if (file == null)
 			return;
 
 		if (!file.exists()) {
-			// Если файл не обнаружился, то удаляю его из списка последних открытых файлов
+			// If the file is not found, then I delete it from the list of recently opened
+			// files
 			lastFiles.remove(file.getPath());
 
-			// Выдаю сообщение об этом неприятном событии
+			// A message about this unpleasant event.
 			messenger.err(Loc.get("file") + " " + file.getPath() + " " + Loc.get("not_found") + ".");
 
 		} else {
@@ -138,13 +137,13 @@ public class Filer {
 				String content = Files.readString(file.toPath(), CHARSET);
 				this.file = file;
 
-				// Передаю прочитанное редактору
+				// Passing to the editor
 				editor.setText(content);
 
-				// Отображаю имя открытого файла в заголовке приложения
+				// Display the name of the open file in the application title
 				app.getFrame().setTitle(WeekendTextEditor.APP_NAME + " - " + file.getPath());
 
-				// Запоминаю его в списке последних открытых файлов
+				// I remember it in the list of recently opened files
 				lastFiles.put(file.getPath());
 
 			} catch (IOException e) {
@@ -156,9 +155,9 @@ public class Filer {
 	}
 
 	/**
-	 * Сохранить текст в указнный файл.
+	 * Save text to file.
 	 * 
-	 * @param file файл для сохранения текста
+	 * @param file file for save.
 	 */
 	public void save(File file) {
 		if (file == null)
@@ -175,10 +174,10 @@ public class Filer {
 			this.file = file;
 			editor.setChanged(false);
 
-			// Отображаю имя файла в заголовке приложения
+			// Display file name in application title
 			app.getFrame().setTitle(WeekendTextEditor.APP_NAME + " - " + file.getPath());
 
-			// Запоминаю его в списке последних открытых файлов
+			// I remember it in the list of recently opened files
 			lastFiles.put(file.getPath());
 
 			act.refreshMenuFile();
@@ -206,11 +205,19 @@ public class Filer {
 		return false;
 	}
 
+	public boolean saveFileForRun() {
+		if (!editor.isChanged())
+			return true;
+
+		saveFile();
+		return !editor.isChanged();
+	}
+
 	/**
-	 * Получить файл для открытия посредством диалога открытия файла.
+	 * Get a file to open via the file open dialog.
 	 * 
-	 * @return файл указанный пользователем или null, если пользователь отказался от
-	 *         открытия файла.
+	 * @return the file specified by the user, or null if the user declined to open
+	 *         the file.
 	 */
 	private File showOpenDialogue() {
 		JFileChooser chooser = getOpenChooser(file);
@@ -224,12 +231,12 @@ public class Filer {
 	}
 
 	/**
-	 * Получить стандартное диалоговое окно для открытия файла настроенное в
-	 * соответствии с нуждами программы.
+	 * Get a standard dialog box for opening a file, customized to suit the needs of
+	 * the program.
 	 * 
-	 * @param currentFile текущий редактируемый файл.
+	 * @param currentFile the current file being edited.
 	 * 
-	 * @return настроенное диалоговое окно.
+	 * @return customized dialog box.
 	 */
 	private JFileChooser getOpenChooser(File currentFile) {
 		JFileChooser chooser = new JFileChooser();
@@ -259,10 +266,10 @@ public class Filer {
 	}
 
 	/**
-	 * Получить файл для сохранения текста посредством диалога сохранения файла.
+	 * Get a file to save the text through the file save dialog.
 	 * 
-	 * @return файл указанный пользователем или null, если пользователь отказался от
-	 *         сохранения файла.
+	 * @return the file specified by the user, or null if the user declined to save
+	 *         the file.
 	 */
 	private File showSaveDialogue() {
 		JFileChooser chooser = getSaveChooser(file);
@@ -275,12 +282,12 @@ public class Filer {
 	}
 
 	/**
-	 * Получить стандартное диалоговое окно для сохранения в файл настроенное в
-	 * соответствии с нуждами программы.
+	 * Get a standard dialog box for saving to a file, customized according to the
+	 * needs of the program.
 	 * 
-	 * @param currentFile текущий редактируемый файл или null.
+	 * @param currentFile the current file being edited or null.
 	 * 
-	 * @return настроенное диалоговое окно.
+	 * @return customized dialog box.
 	 */
 	private JFileChooser getSaveChooser(File currentFile) {
 		JFileChooser chooser = new JFileChooser();
