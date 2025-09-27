@@ -29,14 +29,12 @@ public class Filer {
 	/**
 	 * Create a file handling object.
 	 */
-	public Filer(WeekendTextEditor app, Editor editor, LastFiles lastFiles, Finder finder, Replacer replacer,
-			Messenger messenger) {
+	public Filer(WeekendInterpreter app, Editor editor, LastFiles lastFiles, Finder finder, Replacer replacer) {
 		this.app = app;
 		this.editor = editor;
 		this.lastFiles = lastFiles;
 		this.finder = finder;
 		this.replacer = replacer;
-		this.messenger = messenger;
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class Filer {
 		if (!saveFileIfNecessary())
 			return;
 
-		app.getFrame().setTitle(WeekendTextEditor.APP_NAME);
+		app.getFrame().setTitle(WeekendInterpreter.APP_NAME);
 
 		file = null;
 
@@ -130,7 +128,7 @@ public class Filer {
 			lastFiles.remove(file.getPath());
 
 			// A message about this unpleasant event.
-			messenger.err(Loc.get("file") + " " + file.getPath() + " " + Loc.get("not_found") + ".");
+			Mes.err(Loc.get("file") + " " + file.getPath() + " " + Loc.get("not_found") + ".");
 
 		} else {
 			try {
@@ -141,13 +139,13 @@ public class Filer {
 				editor.setText(content);
 
 				// Display the name of the open file in the application title
-				app.getFrame().setTitle(WeekendTextEditor.APP_NAME + " - " + file.getPath());
+				app.getFrame().setTitle(WeekendInterpreter.APP_NAME + " - " + file.getPath());
 
 				// I remember it in the list of recently opened files
 				lastFiles.put(file.getPath());
 
 			} catch (IOException e) {
-				messenger.err(Loc.get("failed_to_open_file") + " " + file.getPath() + ".\n" + e);
+				Mes.err(Loc.get("failed_to_open_file") + " " + file.getPath() + ".\n" + e);
 			}
 		}
 
@@ -175,17 +173,17 @@ public class Filer {
 			editor.setChanged(false);
 
 			// Display file name in application title
-			app.getFrame().setTitle(WeekendTextEditor.APP_NAME + " - " + file.getPath());
+			app.getFrame().setTitle(WeekendInterpreter.APP_NAME + " - " + file.getPath());
 
 			// I remember it in the list of recently opened files
 			lastFiles.put(file.getPath());
 
 			act.refreshMenuFile();
 
-			WeekendTextEditor.status.showMessage(Loc.get("saved_to_file") + " " + file.getPath());
+			WeekendInterpreter.status.showMessage(Loc.get("saved_to_file") + " " + file.getPath());
 
 		} catch (IOException e) {
-			messenger.err(Loc.get("failed_to_save_file") + " " + file.getPath() + ".\n" + e);
+			Mes.err(Loc.get("failed_to_save_file") + " " + file.getPath() + ".\n" + e);
 		}
 	}
 
@@ -193,7 +191,7 @@ public class Filer {
 		if (!editor.isChanged())
 			return true;
 
-		int retVal = messenger
+		int retVal = Mes
 				.conf(Loc.get("the_text_has_been_changed") + ". " + Loc.get("do_you_want_to_save_the_changes") + "?");
 		if (retVal == JOptionPane.YES_OPTION) {
 			saveFile();
@@ -320,11 +318,10 @@ public class Filer {
 
 	private File file = null;
 
-	private WeekendTextEditor app;
+	private WeekendInterpreter app;
 	private Editor editor;
 	private LastFiles lastFiles;
 	private Finder finder;
 	private Replacer replacer;
-	private Messenger messenger;
 	private Act act;
 }

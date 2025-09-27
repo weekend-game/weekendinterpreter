@@ -42,13 +42,12 @@ public class Act {
 	 * @param laf       LaF.
 	 * @param messenger displaying messages.
 	 */
-	public Act(WeekendTextEditor app, Editor editor, Filer filer, LastFiles lastFiles, Finder finder, Replacer replacer,
-			LaF laf, Messenger messenger, Runner runner) {
+	public Act(WeekendInterpreter app, Editor editor, Filer filer, LastFiles lastFiles, Finder finder,
+			Replacer replacer, LaF laf, Runner runner) {
 
 		this.filer = filer;
 		this.lastFiles = lastFiles;
 		this.laf = laf;
-		this.messenger = messenger;
 
 		// Actions can be used both in the menu and in the toolbar, so it is better to
 		// create and remember them once in the designer.
@@ -153,6 +152,8 @@ public class Act {
 		viewMenu.add(decFontSize);
 		viewMenu.add(defFontSize);
 
+		// Interface language
+
 		viewMenu.add(new JSeparator());
 
 		ButtonGroup btgLan = new ButtonGroup();
@@ -167,7 +168,7 @@ public class Act {
 				String prevLanguage = Proper.getProperty("Language", "en");
 				Proper.setProperty("Language", "ru");
 				if (!prevLanguage.equalsIgnoreCase("ru"))
-					messenger.inf(Loc.get("restart_the_application"));
+					Mes.inf(Loc.get("restart_the_application"));
 			}
 		});
 		ru.setSelected(Loc.getLanguage().equalsIgnoreCase("ru"));
@@ -184,7 +185,7 @@ public class Act {
 				String prevLanguage = Proper.getProperty("Language", "en");
 				Proper.setProperty("Language", "en");
 				if (!prevLanguage.equalsIgnoreCase("en"))
-					messenger.inf(Loc.get("restart_the_application"));
+					Mes.inf(Loc.get("restart_the_application"));
 			}
 		});
 		en.setSelected(Loc.getLanguage().equalsIgnoreCase("en"));
@@ -407,7 +408,7 @@ public class Act {
 	}
 
 	private ImageIcon getImageIcon(String fileName) {
-		return new ImageIcon(getClass().getResource(WeekendTextEditor.IMAGE_PATH + fileName));
+		return new ImageIcon(getClass().getResource(WeekendInterpreter.IMAGE_PATH + fileName));
 	}
 
 	/**
@@ -534,7 +535,7 @@ public class Act {
 	 * @return Action "Exiting the program"
 	 */
 	@SuppressWarnings("serial")
-	private AbstractAction getActExit(WeekendTextEditor app) {
+	private AbstractAction getActExit(WeekendInterpreter app) {
 		return new AbstractAction() {
 			{
 				putValue(Action.NAME, Loc.get("exit"));
@@ -780,7 +781,7 @@ public class Act {
 	 * @return Action "Show toolbar"
 	 */
 	@SuppressWarnings("serial")
-	private AbstractAction getActToolbarOn(WeekendTextEditor editor) {
+	private AbstractAction getActToolbarOn(WeekendInterpreter editor) {
 		return new AbstractAction() {
 			{
 				putValue(Action.NAME, Loc.get("show_toolbar"));
@@ -803,7 +804,7 @@ public class Act {
 	 * @return Action "Show status bar"
 	 */
 	@SuppressWarnings("serial")
-	private AbstractAction getActStatusbarOn(WeekendTextEditor editor) {
+	private AbstractAction getActStatusbarOn(WeekendInterpreter editor) {
 		return new AbstractAction() {
 			{
 				putValue(Action.NAME, Loc.get("show_status_bar"));
@@ -952,7 +953,7 @@ public class Act {
 	 * @return Action "About..."
 	 */
 	@SuppressWarnings("serial")
-	private AbstractAction getActAbout(WeekendTextEditor app) {
+	private AbstractAction getActAbout(WeekendInterpreter app) {
 		return new AbstractAction() {
 			{
 				putValue(Action.NAME, Loc.get("about") + "...");
@@ -961,11 +962,11 @@ public class Act {
 			}
 
 			public void actionPerformed(ActionEvent actionEvent) {
-				String str = "\n" + WeekendTextEditor.APP_NAME + "\n" + Loc.get("version") + " "
-						+ WeekendTextEditor.APP_VERSION + " " + Loc.get("from") + " " + WeekendTextEditor.APP_DATE
-						+ "\n" + WeekendTextEditor.APP_COPYRIGHT + "\n\n" + Loc.get(WeekendTextEditor.APP_OTHER)
+				String str = "\n" + WeekendInterpreter.APP_NAME + "\n" + Loc.get("version") + " "
+						+ WeekendInterpreter.APP_VERSION + " " + Loc.get("from") + " " + WeekendInterpreter.APP_DATE
+						+ "\n" + WeekendInterpreter.APP_COPYRIGHT + "\n\n" + Loc.get(WeekendInterpreter.APP_OTHER)
 						+ "\n\n";
-				messenger.inf(str, Loc.get("about"));
+				Mes.inf(str, Loc.get("about"));
 			}
 		};
 	}
@@ -1008,7 +1009,6 @@ public class Act {
 	private Filer filer;
 	private LastFiles lastFiles;
 	private LaF laf;
-	private Messenger messenger;
 
 	private boolean cutOldValue, pasteOldValue, saveOldValue;
 }

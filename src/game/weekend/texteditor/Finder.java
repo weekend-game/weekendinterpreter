@@ -159,7 +159,7 @@ public class Finder {
 	private void showResult(int i) throws BadLocationException {
 		if (i >= 0) {
 			position = i;
-			WeekendTextEditor.status.showMessage("");
+			WeekendInterpreter.status.showMessage("");
 
 			Rectangle2D rect2D = pane.modelToView2D(position);
 			Rectangle rect = new Rectangle((int) rect2D.getX(), (int) rect2D.getY(), (int) rect2D.getWidth(),
@@ -168,7 +168,7 @@ public class Finder {
 
 			pane.select(position, position + pattern.length());
 		} else
-			WeekendTextEditor.status.showMessage(Loc.get("unable_to_find") + " \"" + pattern + "\"");
+			WeekendInterpreter.status.showMessage(Loc.get("unable_to_find") + " \"" + pattern + "\"");
 	}
 
 	private JFrame appFrame;

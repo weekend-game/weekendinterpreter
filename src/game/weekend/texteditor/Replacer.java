@@ -236,7 +236,7 @@ public class Replacer {
 	private void showResult(int i) throws BadLocationException {
 		if (i >= 0) {
 			position = i;
-			WeekendTextEditor.status.showMessage("");
+			WeekendInterpreter.status.showMessage("");
 
 			// Make visible on screen
 			Rectangle2D rect2D = pane.modelToView2D(position);
@@ -246,7 +246,7 @@ public class Replacer {
 
 			pane.select(position, position + pattern.length());
 		} else
-			WeekendTextEditor.status.showMessage(Loc.get("unable_to_find") + " \"" + pattern + "\"");
+			WeekendInterpreter.status.showMessage(Loc.get("unable_to_find") + " \"" + pattern + "\"");
 	}
 
 	private JFrame appFrame;

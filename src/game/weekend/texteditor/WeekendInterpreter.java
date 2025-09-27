@@ -15,18 +15,18 @@ import javax.swing.WindowConstants;
 import game.weekend.interpreter.Runner;
 
 /**
- * WeekendInterprter application based on WeekendTextEditor.
+ * WeekendInterprter application based on WeekendInterpreter.
  */
-public class WeekendTextEditor {
+public class WeekendInterpreter {
 
 	/** Application name */
 	public static final String APP_NAME = "WeekendInterprter";
 
 	/** Version */
-	public static final String APP_VERSION = "01.20";
+	public static final String APP_VERSION = "01.30";
 
 	/** Date */
-	public static final String APP_DATE = "13.09.2025";
+	public static final String APP_DATE = "27.09.2025";
 
 	/** Copyright */
 	public static final String APP_COPYRIGHT = "(c) Weekend Game, 2025";
@@ -44,7 +44,7 @@ public class WeekendTextEditor {
 	 * Create an application. The application frame, objects required for operation,
 	 * and frame controls are created.
 	 */
-	public WeekendTextEditor() {
+	public WeekendInterpreter() {
 		// Keeper of settings between application sessions
 		Proper.read(APP_NAME);
 
@@ -56,7 +56,7 @@ public class WeekendTextEditor {
 		makeJFrame();
 
 		// Messages
-		Messenger messenger = new Messenger(frame);
+		Mes.setJFrame(frame);
 
 		// Text editor
 		editor = new Editor();
@@ -84,12 +84,12 @@ public class WeekendTextEditor {
 		Replacer replacer = new Replacer(editor.getPane(), frame, laf);
 
 		// Working with files
-		filer = new Filer(this, editor, lastFiles, finder, replacer, messenger);
+		filer = new Filer(this, editor, lastFiles, finder, replacer);
 
 		Runner runner = new Runner(filer, output);
 
 		// Working with menus and toolbars
-		act = new Act(this, editor, filer, lastFiles, finder, replacer, laf, messenger, runner);
+		act = new Act(this, editor, filer, lastFiles, finder, replacer, laf, runner);
 
 		// Menu
 		frame.setJMenuBar(act.getMenuBar());
@@ -102,7 +102,7 @@ public class WeekendTextEditor {
 
 		// Status bar
 		statusbarOn = Proper.getProperty("StatusbarON", "TRUE").equalsIgnoreCase("TRUE") ? true : false;
-		statusbar = WeekendTextEditor.status.getPanel();
+		statusbar = WeekendInterpreter.status.getPanel();
 		if (statusbarOn)
 			frame.getContentPane().add(statusbar, BorderLayout.SOUTH);
 
@@ -147,7 +147,7 @@ public class WeekendTextEditor {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				WeekendTextEditor bv = new WeekendTextEditor();
+				WeekendInterpreter bv = new WeekendInterpreter();
 				bv.getFrame().setVisible(true);
 			}
 		});
