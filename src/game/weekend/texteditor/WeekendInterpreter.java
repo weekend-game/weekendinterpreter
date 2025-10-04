@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -23,10 +24,10 @@ public class WeekendInterpreter {
 	public static final String APP_NAME = "WeekendInterprter";
 
 	/** Version */
-	public static final String APP_VERSION = "01.30";
+	public static final String APP_VERSION = "01.40";
 
 	/** Date */
-	public static final String APP_DATE = "27.09.2025";
+	public static final String APP_DATE = "04.10.2025";
 
 	/** Copyright */
 	public static final String APP_COPYRIGHT = "(c) Weekend Game, 2025";
@@ -125,10 +126,16 @@ public class WeekendInterpreter {
 		// intercept this event
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				if (!filer.saveFileIfNecessary())
+					return;
+
 				// and call this method. It will save the settings
 				close();
 			}
 		});
+
+		frame.setIconImage(
+				new ImageIcon(getClass().getResource(WeekendInterpreter.IMAGE_PATH + "game.gif")).getImage());
 
 		// For ContentPane I set BorderLayout layout manager
 		Container cp = frame.getContentPane();
